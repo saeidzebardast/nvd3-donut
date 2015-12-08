@@ -1,0 +1,70 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../nvd3-behavior/nvd3-behavior.html">
+
+<!--
+An element to create donut chart using nvd3.
+
+Example:
+
+    <nvd3-donut data="[[data]]"></nvd3-donut>
+
+Data Format:
+```
+[
+  {
+    "label": "label 1",
+    "value": 69
+  },
+  {
+    "label": "label 2",
+    "value": 85
+  }
+]
+```
+
+@group NVD3 Elements
+@element nvd3-donut
+@demo demo/index.html
+@hero hero.svg
+-->
+
+<dom-module id="nvd3-donut">
+  <template>
+    <div>
+      <svg id="svg"></svg>
+    </div>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'nvd3-donut',
+      behaviors: [NVD3.ChartBehavior],
+      properties: {
+        /**
+         * Configure how big you want the donut hole size to be.
+         */
+        donutRatio: {
+          type: Number,
+          value: 0.5
+        }
+      },
+
+      attached: function() {
+        this.set('svg', this.$.svg);
+        this.set('chart', nv.models.pieChart()
+          .x(function(d) {
+            return d.label
+          })
+          .y(function(d) {
+            return d.value
+          })
+          .donut(true)
+          .donutRatio(this.donutRatio));
+
+        if (!this.stopAutoDrawing) {
+          this.generateChart();
+        }
+      }
+    });
+  </script>
+</dom-module>
