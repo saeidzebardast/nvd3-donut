@@ -6,7 +6,12 @@ An element to create donut chart using nvd3.
 
 Example:
 
-    <nvd3-donut data="[[data]]"></nvd3-donut>
+    <nvd3-donut
+    data="[[data]]"
+    height="300"
+    width="400"
+    show-legend
+    donut-ratio="0.25"></nvd3-donut>
 
 Data Format:
 ```
@@ -41,25 +46,146 @@ Data Format:
       behaviors: [NVD3.ChartBehavior],
       properties: {
         /**
+         * NVD3 chart object.
+         */
+        chart: {
+          type: Object,
+          value: function() {
+            return nv.models.pieChart()
+              .x(function(d) {
+                return d.label
+              })
+              .y(function(d) {
+                return d.value
+              })
+              .donut(true);
+          }
+        },
+
+        /**
+         * Colors to use for the different data.
+         * If an array is given, it is converted to a function automatically.
+         */
+        color: {
+          type: Array,
+          value: function() {
+            nv.utils.defaultColor();
+          }
+        },
+
+        /**
          * Configure how big you want the donut hole size to be.
          */
         donutRatio: {
           type: Number,
           value: 0.5
+        },
+
+        /**
+         * The height the graph or component created inside the SVG should be made.
+         * Default: The height of the container element (normally the svg itself).
+         */
+        height: {
+          type: Number
+        },
+
+        /**
+         * Object containing the margins for the chart or component.
+         * You can specify only certain margins in the object to change just
+         * those parts.
+         */
+        margin: {
+          type: Object,
+          value: {
+            "left": 0,
+            "right": 0,
+            "top": 0,
+            "bottom": 0
+          }
+        },
+
+        /**
+         * Message to display if no data is provided.
+         */
+        noData: {
+          type: String,
+          value: 'No Data Available.'
+        },
+
+        /**
+         * Show pie chart labels for each slice
+         */
+        showLabels: {
+          type: Boolean,
+          value: false
+        },
+
+        /**
+         * Whether to display the legend or not
+         */
+        showLegend: {
+          type: Boolean,
+          value: false
+        },
+
+        /**
+         * The width the graph or component created inside the SVG should be made.
+         * Default: The width of the container element (normally the svg itself).
+         */
+        width: {
+          type: Number
+        }
+      },
+
+      observers: [
+        '_setColor(color.length)',
+        '_setDonutRatio(donutRatio)',
+        '_setHeight(height)',
+        '_setMargin(margin.top, margin.right, margin.bottom, margin.left)',
+        '_setNoData(noData)',
+        '_setShowLabels(showLabels)',
+        '_setShowLegend(showLegend)',
+        '_setWidth(width)'
+      ],
+
+      _setColor: function(colorLength) {
+        this.chart.color(this.color);
+      },
+
+      _setDonutRatio: function(donutRatio) {
+        this.chart.donutRatio(this.donutRatio);
+      },
+
+      _setHeight: function(height) {
+        if (typeof height === 'number' && height > 0) {
+          this.chart.height(height);
+        }
+      },
+
+      _setMargin: function(marginTop, marginRight, marginBottom, marginLeft) {
+        this.chart.margin(this.margin);
+      },
+
+      _setNoData: function(noData) {
+        this.chart.noData(this.noData);
+      },
+
+      _setShowLabels: function(showLabels) {
+        this.chart.showLabels(showLabels);
+      },
+
+      _setShowLegend: function(showLegend) {
+        this.chart.showLegend(this.showLegend);
+      },
+
+      _setWidth: function(width) {
+        if (typeof width === 'number' && width > 0) {
+          this.chart.width(width);
         }
       },
 
       attached: function() {
         this.set('svg', this.$.svg);
-        this.set('chart', nv.models.pieChart()
-          .x(function(d) {
-            return d.label
-          })
-          .y(function(d) {
-            return d.value
-          })
-          .donut(true)
-          .donutRatio(this.donutRatio));
 
         if (!this.stopAutoDrawing) {
           this.generateChart();
