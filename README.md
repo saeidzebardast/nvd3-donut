@@ -13,7 +13,7 @@ bower install nvd3-donut
 ### Tag
 
 ```
-<nvd3-donut data="[[data]]"></nvd3-donut>
+<nvd3-donut data="[[data]]" auto-resize></nvd3-donut>
 ```
 
 ### Data Format
