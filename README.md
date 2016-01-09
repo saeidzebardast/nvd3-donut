@@ -31,6 +31,9 @@ bower install nvd3-donut
 ]
 ```
 
+## Demo and Options
+See the [component page](http://saeidzebardast.github.io/nvd3-donut) for demo and options.
+
 ## License
 
 MIT © [Saeid Zebardast](http://zebardast.com)
